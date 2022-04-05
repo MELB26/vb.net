@@ -1,0 +1,63 @@
+Imports EmployeeLibrary
+Module VBModule
+ 
+    Sub Main()
+        Dim Output As String
+
+        Console.WriteLine("Employee before instantiation: " & CEmployee3.Count)
+
+        Dim employee1 As CEmployee3 = New CEmployee3("Susan", "Baker")
+        Dim employee2 As CEmployee3 = New CEmployee3("Bob", "Jones")
+
+        Console.WriteLine(vbCrLf & "Employees after instantiation: " & vbCrLf & "via Employee.Count: " & CEmployee3.Count)
+        Console.WriteLine(vbCrLf & "Employees 1: " & employee1.FirstName & " " & employee1.LastName & vbCrLf & "Employee 2: " & employee2.FirstName & " " & employee2.LastName)
+
+        employee1 = Nothing
+        employee2 = Nothing
+
+        System.GC.Collect()
+        Console.ReadLine()
+
+    End Sub
+  
+End Module
+
+Public Class CEmployee3
+    Inherits Object
+
+    Private mFirstName As String
+    Private mLastName As String
+    Private Shared mCount As Integer
+
+    Public Sub New(ByVal firstNameValue As String, ByVal lastNameValue As String)
+        mFirstName = firstNameValue
+        mLastName = lastNameValue
+
+        mCount += 1
+        Console.WriteLine("Employee object constructor: " & mFirstName & " " & mLastName)
+    End Sub
+
+    Protected Overrides Sub Finalize()
+        mCount -= 1
+        Console.WriteLine("Employee object finalizer: " & mFirstName & " " & mLastName & "; count = " & mCount)
+    End Sub
+
+    Public ReadOnly Property FirstName() As String
+        Get
+            Return mFirstName
+        End Get
+    End Property
+
+    Public ReadOnly Property LastName() As String
+        Get
+            Return mLastName
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property Count() As Integer
+        Get
+            Return mCount
+        End Get
+    End Property
+
+End Class
